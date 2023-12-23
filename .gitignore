@@ -63,3 +63,11 @@ libsecp256k1.pc
 /CMakeUserPresets.json
 # Default CMake build directory.
 /build
+
+
+### Zig
+zig-cache/
+zig-out/
+build/
+build-*/
+docgen_tmp/

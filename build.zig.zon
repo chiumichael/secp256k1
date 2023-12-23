@@ -1,0 +1,8 @@
+.{
+	.name = "secp256k1",
+	.version = "0.4.1",
+	.dependencies = .{},
+	.paths = .{
+		"build.zig.zon",
+	},
+}
