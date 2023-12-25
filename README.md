@@ -1,3 +1,7 @@
+# EXPERIMENTAL
+
+This is not yet production ready. Use at your own peril!!
+
 libsecp256k1
 ============
 
