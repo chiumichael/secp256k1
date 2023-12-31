@@ -89,4 +89,39 @@ pub fn build(b: *std.Build) !void {
     lib.linkLibC();
     lib.installHeadersDirectory("include", "secp256k1");
     b.installArtifact(lib);
+
+    // build the pre-computed library first
+    const secp256k1_precomputed = b.addStaticLibrary(.{
+        .name = "secp256k1_precomputed",
+        .target = target,
+        .optimize = optimize,
+        .version = .{ .major = MAJOR, .minor = MINOR, .patch = PATCH },
+    });
+
+    const secp256k1_sources = [_][]const u8{
+        "src/precomputed_ecmult.c",
+        "src/precomputed_ecmult_gen.c",
+    };
+
+    const secp256k1_precomputed_c_flags = &[_][]const u8{""};
+
+    secp256k1_precomputed.addCSourceFiles(.{
+        .files = &secp256k1_sources,
+        .flags = secp256k1_precomputed_c_flags,
+    });
+
+    // built test exe's
+    const tests_exe = b.addExecutable(.{
+        .name = "tests_c",
+        .root_source_file = .{ .path = "src/tests.c" },
+        .target = .{},
+        .optimize = optimize,
+    });
+
+    tests_exe.addIncludePath(.{ .path = "include" });
+    tests_exe.addIncludePath(.{ .path = "contrib" });
+    tests_exe.linkLibC();
+    tests_exe.linkLibrary(secp256k1_precomputed);
+
+    b.installArtifact(tests_exe);
 }
