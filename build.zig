@@ -139,4 +139,21 @@ pub fn build(b: *std.Build) !void {
     ecdsa_example.linkLibrary(secp256k1_precomputed);
 
     b.installArtifact(ecdsa_example);
+
+    if (mem.eql(u8, ecdhMod, "ON")) {
+        const ecdh_example = b.addExecutable(.{
+            .name = "ecdh",
+            .root_source_file = null,
+            .target = target,
+            .optimize = optimize,
+        });
+        ecdh_example.addCSourceFile(.{
+            .file = .{ .path = "examples/ecdh.c" },
+            .flags = &.{},
+        });
+        ecdh_example.addIncludePath(.{ .path = "include" });
+        ecdh_example.linkLibC();
+        ecdh_example.linkLibrary(lib);
+        ecdh_example.linkLibrary(secp256k1_precomputed);
+    }
 }
