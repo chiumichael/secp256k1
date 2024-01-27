@@ -102,11 +102,12 @@ pub fn build(b: *std.Build) !void {
         .flags = secp256k1_precomputed_c_flags,
     });
 
+    b.installArtifact(secp256k1_precomputed);
+
     // built test exe's
     const tests_exe = b.addExecutable(.{
         .name = "tests_c",
         .root_source_file = null,
-        // .root_source_file = .{ .path = "src/tests.c" },
         .target = target,
         .optimize = optimize,
     });
@@ -121,4 +122,21 @@ pub fn build(b: *std.Build) !void {
     tests_exe.linkLibrary(secp256k1_precomputed);
 
     b.installArtifact(tests_exe);
+
+    const ecdsa_example = b.addExecutable(.{
+        .name = "ecdsa",
+        .root_source_file = null,
+        .target = target,
+        .optimize = optimize,
+    });
+    ecdsa_example.addCSourceFile(.{
+        .file = .{ .path = "examples/ecdsa.c" },
+        .flags = &.{},
+    });
+    ecdsa_example.addIncludePath(.{ .path = "include" });
+    ecdsa_example.linkLibC();
+    ecdsa_example.linkLibrary(lib);
+    ecdsa_example.linkLibrary(secp256k1_precomputed);
+
+    b.installArtifact(ecdsa_example);
 }
