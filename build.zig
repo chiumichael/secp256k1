@@ -1,14 +1,6 @@
 const std = @import("std");
 const mem = std.mem;
 
-const test_targets = [_]std.zig.CrossTarget{
-    .{}, // native
-    .{
-        .cpu_arch = .x86_64,
-        .os_tag = .linux,
-    },
-};
-
 pub fn build(b: *std.Build) !void {
     const LIB_NAME = "secp256k1";
     const MAJOR = 0;
@@ -113,9 +105,14 @@ pub fn build(b: *std.Build) !void {
     // built test exe's
     const tests_exe = b.addExecutable(.{
         .name = "tests_c",
-        .root_source_file = .{ .path = "src/tests.c" },
-        .target = .{},
+        .root_source_file = null,
+        // .root_source_file = .{ .path = "src/tests.c" },
+        .target = target,
         .optimize = optimize,
+    });
+    tests_exe.addCSourceFile(.{
+        .file = .{ .path = "src/tests.c" },
+        .flags = &.{},
     });
 
     tests_exe.addIncludePath(.{ .path = "include" });
