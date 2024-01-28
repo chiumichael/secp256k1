@@ -158,4 +158,18 @@ pub fn build(b: *std.Build) !void {
 
         b.installArtifact(ecdh_example);
     }
+
+    if (schnorrSigMod) {
+        const schnorr_example = b.addExecutable(.{ .name = "schnorr", .root_source_file = null, .target = target, .optimize = optimize });
+        schnorr_example.addCSourceFile(.{
+            .file = .{ .path = "examples/schnorr.c" },
+            .flags = &.{},
+        });
+        schnorr_example.addIncludePath(.{ .path = "include" });
+        schnorr_example.linkLibC();
+        schnorr_example.linkLibrary(lib);
+        schnorr_example.linkLibrary(secp256k1_precomputed);
+
+        b.installArtifact(schnorr_example);
+    }
 }
