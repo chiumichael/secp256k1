@@ -155,5 +155,7 @@ pub fn build(b: *std.Build) !void {
         ecdh_example.linkLibC();
         ecdh_example.linkLibrary(lib);
         ecdh_example.linkLibrary(secp256k1_precomputed);
+
+        b.installArtifact(ecdh_example);
     }
 }
