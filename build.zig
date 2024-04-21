@@ -79,7 +79,7 @@ pub fn build(b: *std.Build) !void {
     });
 
     lib.linkLibC();
-    lib.installHeadersDirectory("include", "secp256k1");
+    lib.installHeadersDirectory(.{ .path = "include" }, "secp256k1", .{});
     b.installArtifact(lib);
 
     // build the pre-computed library first
