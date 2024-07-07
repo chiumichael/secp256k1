@@ -66,6 +66,7 @@ libsecp256k1.pc
 
 
 ### Zig
+.zig-cache/
 zig-cache/
 zig-out/
 build/

@@ -66,8 +66,8 @@ pub fn build(b: *std.Build) !void {
         }
     };
 
-    lib.addIncludePath(.{ .path = "include" });
-    lib.addIncludePath(.{ .path = "src/modules" });
+    lib.addIncludePath(.{ .cwd_relative = "include" });
+    lib.addIncludePath(.{ .cwd_relative = "src/modules" });
 
     const src_files = [_][]const u8{
         "src/secp256k1.c",
@@ -79,7 +79,7 @@ pub fn build(b: *std.Build) !void {
     });
 
     lib.linkLibC();
-    lib.installHeadersDirectory(.{ .path = "include" }, "secp256k1", .{});
+    lib.installHeadersDirectory(.{ .cwd_relative = "include" }, "secp256k1", .{});
     b.installArtifact(lib);
 
     // build the pre-computed library first
@@ -112,12 +112,12 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
     tests_exe.addCSourceFile(.{
-        .file = .{ .path = "src/tests.c" },
+        .file = .{ .cwd_relative = "src/tests.c" },
         .flags = &.{},
     });
 
-    tests_exe.addIncludePath(.{ .path = "include" });
-    tests_exe.addIncludePath(.{ .path = "contrib" });
+    tests_exe.addIncludePath(.{ .cwd_relative = "include" });
+    tests_exe.addIncludePath(.{ .cwd_relative = "contrib" });
     tests_exe.linkLibC();
     tests_exe.linkLibrary(secp256k1_precomputed);
 
@@ -130,10 +130,10 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
     ecdsa_example.addCSourceFile(.{
-        .file = .{ .path = "examples/ecdsa.c" },
+        .file = .{ .cwd_relative = "examples/ecdsa.c" },
         .flags = &.{},
     });
-    ecdsa_example.addIncludePath(.{ .path = "include" });
+    ecdsa_example.addIncludePath(.{ .cwd_relative = "include" });
     ecdsa_example.linkLibC();
     ecdsa_example.linkLibrary(lib);
     ecdsa_example.linkLibrary(secp256k1_precomputed);
@@ -148,10 +148,10 @@ pub fn build(b: *std.Build) !void {
             .optimize = optimize,
         });
         ecdh_example.addCSourceFile(.{
-            .file = .{ .path = "examples/ecdh.c" },
+            .file = .{ .cwd_relative = "examples/ecdh.c" },
             .flags = &.{},
         });
-        ecdh_example.addIncludePath(.{ .path = "include" });
+        ecdh_example.addIncludePath(.{ .cwd_relative = "include" });
         ecdh_example.linkLibC();
         ecdh_example.linkLibrary(lib);
         ecdh_example.linkLibrary(secp256k1_precomputed);
@@ -162,10 +162,10 @@ pub fn build(b: *std.Build) !void {
     if (schnorrSigMod) {
         const schnorr_example = b.addExecutable(.{ .name = "schnorr", .root_source_file = null, .target = target, .optimize = optimize });
         schnorr_example.addCSourceFile(.{
-            .file = .{ .path = "examples/schnorr.c" },
+            .file = .{ .cwd_relative = "examples/schnorr.c" },
             .flags = &.{},
         });
-        schnorr_example.addIncludePath(.{ .path = "include" });
+        schnorr_example.addIncludePath(.{ .cwd_relative = "include" });
         schnorr_example.linkLibC();
         schnorr_example.linkLibrary(lib);
         schnorr_example.linkLibrary(secp256k1_precomputed);
